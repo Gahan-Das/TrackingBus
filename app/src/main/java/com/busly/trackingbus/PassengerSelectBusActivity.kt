@@ -9,14 +9,20 @@ import androidx.appcompat.app.AppCompatActivity
 import com.busly.trackingbus.databinding.ActivityPassengerSelectBusBinding
 import com.google.firebase.database.*
 
-data class BusRoute(
-    val busNumber: String? = null,
-    val stops: List<String>? = null
+data class Stop(
+    val id: String,
+    val name: String,
+    val lat: Double,
+    val lng: Double
 )
 
 class PassengerSelectBusActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPassengerSelectBusBinding
+
+    // In-memory cache
+    private val stopNames = mutableListOf<String>()
+    private val nameToIdMap = mutableMapOf<String, String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,56 +30,55 @@ class PassengerSelectBusActivity : AppCompatActivity() {
         binding = ActivityPassengerSelectBusBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupAutoComplete()
+        loadStopsForAutoComplete()
         setupTrackBus()
         setupSearchBuses()
     }
 
-    // ---------------- AUTOCOMPLETE ----------------
+    // ---------------- LOAD STOPS & AUTOCOMPLETE ----------------
 
-    private fun setupAutoComplete() {
+    private fun loadStopsForAutoComplete() {
 
-        val stopNames = mutableSetOf<String>()
+        val stopsRef = FirebaseDatabase.getInstance().getReference("stops")
 
-        val stopRef = FirebaseDatabase.getInstance()
-            .getReference("busRoutes")
-
-        stopRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        stopsRef.addListenerForSingleValueEvent(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 stopNames.clear()
+                nameToIdMap.clear()
 
-                for (busSnap in snapshot.children) {
+                for (stopSnap in snapshot.children) {
+                    val stopId = stopSnap.key ?: continue
+                    val stopName = stopSnap.child("name").getValue(String::class.java) ?: continue
 
-                    val stopsSnap = busSnap.child("stops")
-                    if (!stopsSnap.exists()) continue
-
-                    for (stopSnap in stopsSnap.children) {
-                        stopSnap.getValue(String::class.java)?.let {
-                            stopNames.add(it)
-                        }
-                    }
+                    stopNames.add(stopName)
+                    nameToIdMap[stopName] = stopId
                 }
 
-
-
-                val adapter = ArrayAdapter(
-                    this@PassengerSelectBusActivity,
-                    android.R.layout.simple_dropdown_item_1line,
-                    stopNames.toList().sorted()
-                )
-
-                binding.etSource.setAdapter(adapter)
-                binding.etDestination.setAdapter(adapter)
-
-                binding.etSource.threshold = 1
-                binding.etDestination.threshold = 1
-
+                setupAutoCompleteAdapters()
             }
 
-            override fun onCancelled(error: DatabaseError) {}
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(
+                    this@PassengerSelectBusActivity,
+                    "Failed to load stops",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         })
+    }
+
+    private fun setupAutoCompleteAdapters() {
+
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_dropdown_item_1line,
+            stopNames
+        )
+
+        binding.etSource.setAdapter(adapter)
+        binding.etDestination.setAdapter(adapter)
     }
 
     // ---------------- TRACK BY BUS NUMBER ----------------
@@ -82,7 +87,11 @@ class PassengerSelectBusActivity : AppCompatActivity() {
 
         binding.btnTrackBus.setOnClickListener {
 
-            val busId = binding.etBusIdPassenger.text.toString().trim().uppercase()
+            val busId = binding.etBusIdPassenger
+                .text
+                .toString()
+                .trim()
+                .uppercase()
 
             if (busId.isEmpty()) {
                 Toast.makeText(this, "Enter bus number", Toast.LENGTH_SHORT).show()
@@ -101,49 +110,53 @@ class PassengerSelectBusActivity : AppCompatActivity() {
 
         binding.btnSearchBuses.setOnClickListener {
 
-            val source = binding.etSource.text.toString().trim()
-            val destination = binding.etDestination.text.toString().trim()
+            val sourceName = binding.etSource.text.toString().trim()
+            val destinationName = binding.etDestination.text.toString().trim()
 
-            if (source.isEmpty() || destination.isEmpty()) {
-                Toast.makeText(this, "Enter source and destination", Toast.LENGTH_SHORT).show()
+            val sourceId = nameToIdMap[sourceName]
+            val destinationId = nameToIdMap[destinationName]
+
+            if (sourceId == null || destinationId == null) {
+                Toast.makeText(
+                    this,
+                    "Select source and destination from suggestions",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return@setOnClickListener
             }
 
-            searchBuses(source, destination)
+            searchBuses(sourceId, destinationId)
         }
     }
 
-    private fun searchBuses(source: String, destination: String) {
+    private fun searchBuses(sourceId: String, destinationId: String) {
 
-        val ref = FirebaseDatabase.getInstance()
-            .getReference("busRoutes")
-
+        val routesRef = FirebaseDatabase.getInstance().getReference("busRoutes")
         val matchedBuses = mutableListOf<String>()
 
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+        routesRef.addListenerForSingleValueEvent(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                for (busSnap in snapshot.children) {
+                for (routeSnap in snapshot.children) {
 
-                    // ✅ SAFELY READ STOPS
-                    val stops = busSnap.child("stops").children
+                    val routeStops = routeSnap.child("stops")
+                        .children
                         .mapNotNull { it.getValue(String::class.java) }
 
-                    if (stops.isEmpty()) continue
+                    if (routeStops.isEmpty()) continue
 
-                    // ✅ SAFELY READ BUS NUMBER
-                    val busNumber = busSnap.child("busNumber")
+                    val busNumber = routeSnap.child("busNumber")
                         .getValue(String::class.java)
-                        ?: busSnap.key
+                        ?: routeSnap.key
                         ?: continue
 
-                    val upRoute = stops
-                    val downRoute = stops.reversed()
+                    val forward = routeStops
+                    val backward = routeStops.reversed()
 
                     if (
-                        canServe(upRoute, source, destination) ||
-                        canServe(downRoute, source, destination)
+                        canServe(forward, sourceId, destinationId) ||
+                        canServe(backward, sourceId, destinationId)
                     ) {
                         matchedBuses.add(busNumber)
                     }
@@ -158,11 +171,18 @@ class PassengerSelectBusActivity : AppCompatActivity() {
 
     // ---------------- HELPERS ----------------
 
-    private fun canServe(route: List<String>, source: String, destination: String): Boolean {
-        val normalizedRoute = route.map { it.lowercase() }
-        val s = normalizedRoute.indexOf(source.lowercase())
-        val d = normalizedRoute.indexOf(destination.lowercase())
-        return s != -1 && d != -1 && s < d
+    private fun canServe(
+        route: List<String>,
+        sourceId: String,
+        destinationId: String
+    ): Boolean {
+
+        val sourceIndex = route.indexOf(sourceId)
+        val destinationIndex = route.indexOf(destinationId)
+
+        return sourceIndex != -1 &&
+                destinationIndex != -1 &&
+                sourceIndex < destinationIndex
     }
 
     private fun showResults(buses: List<String>) {
