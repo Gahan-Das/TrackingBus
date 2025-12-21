@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/bus_icon"
+        android:label="Where is My Bus?"
+        android:roundIcon="@mipmap/bus_icon_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.TrackingBus">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDWQFbrf12ANdN1W_4p97PKm8RC8ZYpx8U" />
+        <!-- ✅ This is your launcher activity -->
+        <activity
+            android:name=".AuthChoiceActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- ✅ Internal activities (no intent-filter → no exported needed) -->
+        <activity android:name=".RoleSelectionActivity" />
+        <activity android:name=".DriverSetupActivity" />
+        <activity android:name=".PassengerSelectBusActivity" />
+        <activity android:name=".PassengerMapActivity" />
+        <activity android:name=".UpdateRouteActivity" />
+
+
+        <!-- ✅ MainActivity is NOT a launcher, so exported=false -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.TrackingBus" />
+    </application>
+
+</manifest>

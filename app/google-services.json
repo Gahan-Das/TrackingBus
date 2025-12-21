@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "706438217026",
+    "firebase_url": "https://tracking-bus-1c505-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "tracking-bus-1c505",
+    "storage_bucket": "tracking-bus-1c505.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:706438217026:android:31167e5a885e4e0f4a5cdb",
+        "android_client_info": {
+          "package_name": "com.busly.trackingbus"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQgzF7V5HiEPzVknI3lkUsyJ6io8Z9k80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

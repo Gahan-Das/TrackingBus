@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Bus Number -->
+    <EditText
+        android:id="@+id/etBusNumber"
+        android:hint="Enter Bus Number (e.g., 1A)"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textCapCharacters"/>
+
+    <!-- Route String -->
+    <EditText
+        android:id="@+id/etRouteString"
+        android:hint="Enter Route (e.g., Ramnagar->Garden Reach->...->Mukundapur)"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:minLines="3"
+        android:scrollHorizontally="false" />
+
+    <!-- Submit Button -->
+    <Button
+        android:id="@+id/btnSubmitRoute"
+        android:text="Submit Route"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>
