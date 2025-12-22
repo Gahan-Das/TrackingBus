@@ -1,6 +1,9 @@
 package com.busly.trackingbus
 
+<<<<<<< HEAD
 import android.util.Log
+=======
+>>>>>>> 149ecc7949bb67fa63c9e8d12f0e3f18f0a8eeb1
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.*
@@ -26,8 +29,11 @@ class PassengerMapActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_passenger_map)
 
+<<<<<<< HEAD
         Log.d("MAP_KEY_TEST", BuildConfig.MAPS_API_KEY)
 
+=======
+>>>>>>> 149ecc7949bb67fa63c9e8d12f0e3f18f0a8eeb1
         busNumber = intent.getStringExtra("busNumber")?.trim() ?: ""
 
         val mapFragment = supportFragmentManager

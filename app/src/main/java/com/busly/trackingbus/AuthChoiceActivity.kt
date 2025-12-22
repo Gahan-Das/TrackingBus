@@ -16,6 +16,10 @@ class AuthChoiceActivity : AppCompatActivity() {
         binding = ActivityAuthChoiceBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 149ecc7949bb67fa63c9e8d12f0e3f18f0a8eeb1
         auth = FirebaseAuth.getInstance()
 
         // If already logged in, skip to role selection

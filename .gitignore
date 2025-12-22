@@ -13,4 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+<<<<<<< HEAD
 gradle.properties
+=======
+>>>>>>> 149ecc7949bb67fa63c9e8d12f0e3f18f0a8eeb1

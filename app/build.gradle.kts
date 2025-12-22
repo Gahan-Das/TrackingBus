@@ -9,6 +9,7 @@ android {
     namespace = "com.busly.trackingbus"
     compileSdk = 34
 
+<<<<<<< HEAD
 
 
     buildFeatures {
@@ -29,6 +30,9 @@ android {
 
         // For AndroidManifest.xml (Maps SDK)
         manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
+=======
+    defaultConfig {
+>>>>>>> 149ecc7949bb67fa63c9e8d12f0e3f18f0a8eeb1
         applicationId = "com.busly.trackingbus"
         minSdk = 24
         targetSdk = 34
@@ -36,6 +40,14 @@ android {
         versionName = "1.0"
     }
 
+<<<<<<< HEAD
+=======
+    buildFeatures {
+        compose = true
+        viewBinding = true
+    }
+
+>>>>>>> 149ecc7949bb67fa63c9e8d12f0e3f18f0a8eeb1
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.3"
     }
