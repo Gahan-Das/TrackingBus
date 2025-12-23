@@ -15,12 +15,24 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+        // For Kotlin code
+//        buildConfigField(
+//            "String",
+//            "MAPS_API_KEY",
+//            "\"$mapsApiKey\""
+//        )
+
+        // For AndroidManifest.xml
+        manifestPlaceholders["MAPS_API_KEY"] = project.property("MAPS_API_KEY") as String
     }
 
     buildFeatures {
         compose = true
         viewBinding = true
+        buildConfig = true
     }
+
+
 
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.3"

@@ -19,15 +19,12 @@
         android:theme="@style/Theme.TrackingBus">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-
             android:value="${MAPS_API_KEY}"/>
 
         <!-- ✅ This is your launcher activity -->
         <activity
             android:name=".AuthChoiceActivity"
             android:exported="true">
-
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
