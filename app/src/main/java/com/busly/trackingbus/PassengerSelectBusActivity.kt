@@ -1,5 +1,7 @@
 package com.busly.trackingbus
 
+import androidx.recyclerview.widget.LinearLayoutManager
+import android.util.Log
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -161,7 +163,7 @@ class PassengerSelectBusActivity : AppCompatActivity() {
                         matchedBuses.add(busNumber)
                     }
                 }
-
+                Log.d("BUS_SEARCH", "Matched buses: $matchedBuses")
                 showResults(matchedBuses)
             }
 
@@ -188,11 +190,27 @@ class PassengerSelectBusActivity : AppCompatActivity() {
     private fun showResults(buses: List<String>) {
 
         binding.tvSearchResults.visibility = View.VISIBLE
+        binding.rvBusResults.visibility = View.VISIBLE
 
-        binding.tvSearchResults.text =
-            if (buses.isEmpty())
-                "No buses found"
-            else
-                "Available buses: ${buses.joinToString(", ")}"
+        if (buses.isEmpty()) {
+            binding.tvSearchResults.text = "No buses found"
+            binding.rvBusResults.adapter = null
+            return
+        }
+
+        binding.tvSearchResults.text = "Available buses"
+
+        binding.rvBusResults.layoutManager =
+            LinearLayoutManager(this)
+
+        binding.rvBusResults.adapter =
+            BusResultAdapter(buses) { busNumber ->
+
+                // 🔥 SAME PIPELINE AS MANUAL SEARCH
+                val intent = Intent(this, PassengerMapActivity::class.java)
+                intent.putExtra("busNumber", busNumber)
+                startActivity(intent)
+            }
     }
+
 }

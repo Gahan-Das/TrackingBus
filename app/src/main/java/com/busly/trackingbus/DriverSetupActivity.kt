@@ -1,34 +1,41 @@
 package com.busly.trackingbus
 
-import android.content.Intent
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Looper
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.busly.trackingbus.databinding.ActivityDriverSetupBinding
-import com.google.android.gms.location.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
 class DriverSetupActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDriverSetupBinding
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var driverRef: DatabaseReference
 
     private var currentBusId: String? = null
+    private var destination: String? = null
 
     private val driverId by lazy {
         FirebaseAuth.getInstance().uid ?: "driver_${System.currentTimeMillis()}"
     }
 
+    // ---------- Permission launcher ----------
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
-            if (result.values.any { it }) startLocationUpdates()
+            if (result[Manifest.permission.ACCESS_FINE_LOCATION] == true) {
+                startTrackingAndOpenMap()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Location permission is required to start tracking",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,36 +43,26 @@ class DriverSetupActivity : AppCompatActivity() {
         binding = ActivityDriverSetupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-        // Start sharing location
         binding.btnStartSharing.setOnClickListener {
-            val busId = binding.etBusId.text.toString().trim().uppercase()
-            val destination = binding.etDestination.text.toString().trim()
+            val busIdInput = binding.etBusId.text.toString().trim().uppercase()
+            val destInput = binding.etDestination.text.toString().trim()
 
-            if (busId.isEmpty() || destination.isEmpty()) {
-                Toast.makeText(this, "Fill bus number and destination", Toast.LENGTH_SHORT).show()
+            if (busIdInput.isEmpty() || destInput.isEmpty()) {
+                Toast.makeText(this, "Enter bus number and destination", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            currentBusId = busId
-            setupPresence(busId)
+            currentBusId = busIdInput
+            destination = destInput
 
-            driverRef.child("destination").setValue(destination)
+            setupPresence(busIdInput)
+            driverRef.child("destination").setValue(destInput)
 
-            requestLocationPermission()
+            checkLocationPermission()
         }
-
-        // NEW: Update/Insert Route button
-        binding.btnUpdateRoute.setOnClickListener {
-            val intent = Intent(this, UpdateRouteActivity::class.java)
-            startActivity(intent)
-        }
-
     }
 
-    // ---------------- PRESENCE ----------------
-
+    // ---------- Firebase presence ----------
     private fun setupPresence(busId: String) {
         driverRef = FirebaseDatabase.getInstance(
             "https://tracking-bus-1c505-default-rtdb.asia-southeast1.firebasedatabase.app"
@@ -94,19 +91,15 @@ class DriverSetupActivity : AppCompatActivity() {
         })
     }
 
-    // ---------------- LOCATION ----------------
-
-    private fun requestLocationPermission() {
-        val fineGranted = ContextCompat.checkSelfPermission(
-            this, Manifest.permission.ACCESS_FINE_LOCATION
+    // ---------- Permission ----------
+    private fun checkLocationPermission() {
+        val granted = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
 
-        val coarseGranted = ContextCompat.checkSelfPermission(
-            this, Manifest.permission.ACCESS_COARSE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-
-        if (fineGranted || coarseGranted) {
-            startLocationUpdates()
+        if (granted) {
+            startTrackingAndOpenMap()
         } else {
             permissionLauncher.launch(
                 arrayOf(
@@ -117,41 +110,24 @@ class DriverSetupActivity : AppCompatActivity() {
         }
     }
 
-    private fun startLocationUpdates() {
-        val busId = currentBusId ?: return
+    // ---------- Start service + open map ----------
+    private fun startTrackingAndOpenMap() {
 
-        val request = LocationRequest.Builder(
-            Priority.PRIORITY_HIGH_ACCURACY,
-            5000L
-        )
-            .setMinUpdateDistanceMeters(3f)
-            .build()
+        // 1️⃣ Start foreground service
+        val serviceIntent = Intent(this, LocationService::class.java).apply {
+            putExtra("busId", currentBusId)
+            putExtra("driverId", driverId)
+        }
+        ContextCompat.startForegroundService(this, serviceIntent)
 
-        fusedLocationClient.requestLocationUpdates(
-            request,
-            object : LocationCallback() {
-                override fun onLocationResult(result: LocationResult) {
-                    val loc = result.lastLocation ?: return
-                    sendLocationToFirebase(busId, loc)
-                }
-            },
-            Looper.getMainLooper()
-        )
+        // 2️⃣ Open map activity
+        val mapIntent = Intent(this, DriverMapActivity::class.java).apply {
+            putExtra("busId", currentBusId)
+            putExtra("destination", destination)
+        }
+        startActivity(mapIntent)
+
+        // 3️⃣ Kill setup screen
+        finish()
     }
-
-    // ---------------- FIREBASE UPDATE ----------------
-
-    private fun sendLocationToFirebase(busId: String, location: android.location.Location) {
-        val update = mapOf(
-            "latitude" to location.latitude,
-            "longitude" to location.longitude,
-            "lastUpdated" to ServerValue.TIMESTAMP,
-            "online" to true
-        )
-        driverRef.updateChildren(update)
-    }
-
-    // ---------------- ROUTE UPLOAD ----------------
-
-    
 }

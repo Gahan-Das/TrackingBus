@@ -27,6 +27,11 @@ class PassengerMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         busNumber = intent.getStringExtra("busNumber")?.trim() ?: ""
 
+        if (busNumber.isBlank()) {
+            finish()
+            return
+        }
+
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.mapFragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
