@@ -60,6 +60,11 @@ class DriverSetupActivity : AppCompatActivity() {
 
             checkLocationPermission()
         }
+
+        binding.btnUpdateRoute.setOnClickListener {
+            val intent = Intent(this, UpdateRouteActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     // ---------- Firebase presence ----------
