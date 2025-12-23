@@ -14,9 +14,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/bus_icon"
-        android:label="Where is My Bus?"
-        android:roundIcon="@mipmap/bus_icon_round"
+        android:icon="@mipmap/icon_bus"
+        android:label="RouteX"
+        android:roundIcon="@mipmap/icon_bus_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TrackingBus">
         <meta-data
