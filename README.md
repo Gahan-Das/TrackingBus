@@ -34,9 +34,10 @@ All data synchronization is handled in real time using Firebase.
 </ul>
 
 <h3>App Workflow</h3>
-Driver → Shares live GPS location → Firebase Realtime Database
-Passenger → Fetches bus data → Displays live location on Google Maps
-
+<ul>
+  <li>Driver → Shares live GPS location → Firebase Realtime Database</li>
+  <li>Passenger → Fetches bus data → Displays live location on Google Maps</li>
+</ul>
 
 <h3>Future Improvements</h3>
 <ul>
