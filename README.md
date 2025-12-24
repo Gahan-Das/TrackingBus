@@ -16,7 +16,7 @@ All data synchronization is handled in real time using Firebase.
 
 <h3>Key Features</h3>
 <ul>
-  <li>Real-time bus location sharing by drivers</li>
+  <li>Real-time bus location shared by drivers</li>
   <li>Live bus tracking on Google Maps</li>
   <li>Search buses using a specific Bus Number</li>
   <li>Find buses between a selected Source and Destination</li>
