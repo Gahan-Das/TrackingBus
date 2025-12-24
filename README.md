@@ -27,10 +27,10 @@ All data synchronization is handled in real time using Firebase.
 <h3>Tech Stack</h3>
 <ul>
   <li><b>Frontend: </b>Android (Kotlin)</li>
-  <li><b>Development Tool:</b>Android Studio</li>
-  <li><b>Backend & Database:</b>Firebase Realtime Database, Firebase Authentication</li>
-  <li><b>Cloud Services:</b>Google Cloud Platform</li>
-  <li><b>Maps & Location:</b>Google Maps API</li>
+  <li><b>Development Tool: </b>Android Studio</li>
+  <li><b>Backend & Database: </b>Firebase Realtime Database, Firebase Authentication</li>
+  <li><b>Cloud Services: </b>Google Cloud Platform</li>
+  <li><b>Maps & Location: </b>Google Maps API</li>
 </ul>
 
 <h3>App Workflow</h3>
