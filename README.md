@@ -53,7 +53,21 @@ All data synchronization is handled in real time using Firebase.
 
 ## Screenshots
 <p align="center">
-  <img src="screenshots/home.png" width="250"/>
-  <img src="screenshots/driver.png" width="250"/>
-  <img src="screenshots/passenger_map.png" width="250"/>
+  <figure style="display:inline-block; margin:10px; text-align:center;">
+    <img src="screenshots/home.png" width="230"
+         style="border:1px solid #ccc; border-radius:6px; padding:4px;"/>
+    <figcaption><b>Home Screen</b><br/>Driver / Passenger Selection</figcaption>
+  </figure>
+
+  <figure style="display:inline-block; margin:10px; text-align:center;">
+    <img src="screenshots/driver.png" width="230"
+         style="border:1px solid #ccc; border-radius:6px; padding:4px;"/>
+    <figcaption><b>Driver Mode</b><br/>Live Location Sharing</figcaption>
+  </figure>
+
+  <figure style="display:inline-block; margin:10px; text-align:center;">
+    <img src="screenshots/passenger_map.png" width="230"
+         style="border:1px solid #ccc; border-radius:6px; padding:4px;"/>
+    <figcaption><b>Passenger View</b><br/>Live Bus Tracking on Maps</figcaption>
+  </figure>
 </p>
