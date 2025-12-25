@@ -52,13 +52,13 @@ All data synchronization is handled in real time using Firebase.
 </ul>
 
 ## Screenshots
-<p>
+<p align="center">
   <img src="screenshots/home.png" alt="Home Page of RouteX" width="230"/>
   <img src="screenshots/driver.png" alt="Driver Page of RouteX" width="230"/>
   <img src="screenshots/passenger_map.png" alt="Passenger Map of RouteX" width="230"/>
 </p>
 
-<p >
+<p align="center">
   <sub><b>Home</b></sub>&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;
   <sub><b>Driver Mode</b></sub>&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;
   <sub><b>Passenger Map</b></sub>
