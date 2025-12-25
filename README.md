@@ -51,3 +51,8 @@ All data synchronization is handled in real time using Firebase.
   <li>Souptik Das</li>
 </ul>
 
+## Screenshots
+
+![Home Screen](screenshots/home.png)
+![Driver Location Sharing](screenshots/driver.png)
+![Live Bus Tracking](screenshots/passenger_map.png)
