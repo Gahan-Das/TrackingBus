@@ -52,7 +52,8 @@ All data synchronization is handled in real time using Firebase.
 </ul>
 
 ## Screenshots
-
-![Home Screen](screenshots/home.png)
-![Driver Location Sharing](screenshots/driver.png)
-![Live Bus Tracking](screenshots/passenger_map.png)
+<p align="center">
+  <img src="screenshots/home.png" width="250"/>
+  <img src="screenshots/driver.png" width="250"/>
+  <img src="screenshots/passenger_map.png" width="250"/>
+</p>
