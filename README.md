@@ -54,15 +54,15 @@ All data synchronization is handled in real time using Firebase.
 ## Screenshots
 <p align="center">
   <img src="screenshots/home.png" width="230"
-       style="border:1px solid #ccc; border-radius:6px; padding:4px;"/>
+       style="border:1px solid #000; border-radius:6px; padding:4px;"/>
   <img src="screenshots/driver.png" width="230"
-       style="border:1px solid #ccc; border-radius:6px; padding:4px;"/>
+       style="border:1px solid #000; border-radius:6px; padding:4px;"/>
   <img src="screenshots/passenger_map.png" width="230"
-       style="border:1px solid #ccc; border-radius:6px; padding:4px;"/>
+       style="border:1px solid #000; border-radius:6px; padding:4px;"/>
 </p>
 
 <p align="center">
-  <sub><b>Home</b></sub>&nbsp;&nbsp;&nbsp;&nbsp;
-  <sub><b>Driver Mode</b></sub>&nbsp;&nbsp;&nbsp;&nbsp;
+  <sub><b>Home</b></sub>&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;
+  <sub><b>Driver Mode</b></sub>&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;
   <sub><b>Passenger Map</b></sub>
 </p>
