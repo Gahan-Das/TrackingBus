@@ -13,6 +13,7 @@ class UpdateRouteActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUpdateRouteBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
 
         binding.btnSubmitRoute.setOnClickListener {
@@ -25,7 +26,8 @@ class UpdateRouteActivity : AppCompatActivity() {
             }
 
             // Split route by "->"
-            val stopsList = routeString.split("->").map { it.trim() }
+            val stopsList = routeString.split("->").map { it.trim().replace(' ','_').lowercase() }
+
 
             saveRouteToFirebase(busNumber, stopsList)
         }

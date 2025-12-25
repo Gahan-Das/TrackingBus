@@ -47,21 +47,18 @@ All data synchronization is handled in real time using Firebase.
 
 <h3>Contributors</h3>
 <ul>
-  <li>Gahan Das</li>
-  <li>Souptik Das</li>
+  <li><b>Gahan Das: </b>Android app development, core logic, Firebase integration</li>
+  <li><b>Souptik Das: </b>Presentation (PPT)</li>
 </ul>
 
 ## Screenshots
-<p align="center">
-  <img src="screenshots/home.png" width="230"
-       border="1"/>
-  <img src="screenshots/driver.png" width="230"
-       border="1"/>
-  <img src="screenshots/passenger_map.png" width="230"
-       border="1"/>
+<p>
+  <img src="screenshots/home.png" alt="Home Page of RouteX" width="230"/>
+  <img src="screenshots/driver.png" alt="Driver Page of RouteX" width="230"/>
+  <img src="screenshots/passenger_map.png" alt="Passenger Map of RouteX" width="230"/>
 </p>
 
-<p align="center">
+<p >
   <sub><b>Home</b></sub>&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;
   <sub><b>Driver Mode</b></sub>&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;
   <sub><b>Passenger Map</b></sub>
