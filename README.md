@@ -53,16 +53,16 @@ All data synchronization is handled in real time using Firebase.
 
 ## Screenshots
 <p align="center">
-  <figure style = "display: block, text-align: center">
-  <img src="screenshots/home.png" width="250" style = "border: 1px solid black;"/>
-  <figcaption><b>Home Screen:</b>Driver / Passenger Selection</figcaption>
-  </figure>
-  <figure style = "display: block, text-align: center">
-  <img src="screenshots/driver.png" width="250" style = "border: 1px solid black;"/>
-  <figcaption><b>Driver Mode:</b>Live Location Sharing</figcaption>
-  </figure>
-  <figure style = "display: block, text-align: center">
-  <img src="screenshots/passenger_map.png" width="250" style = "border: 1px solid black;"/>
-  <figcaption><b>Passenger View:</b>Live Bus Tracking on Maps</figcaption>
-  </figure>
+  <img src="screenshots/home.png" width="230"
+       style="border:1px solid #ccc; border-radius:6px; padding:4px;"/>
+  <img src="screenshots/driver.png" width="230"
+       style="border:1px solid #ccc; border-radius:6px; padding:4px;"/>
+  <img src="screenshots/passenger_map.png" width="230"
+       style="border:1px solid #ccc; border-radius:6px; padding:4px;"/>
+</p>
+
+<p align="center">
+  <sub><b>Home</b></sub>&nbsp;&nbsp;&nbsp;&nbsp;
+  <sub><b>Driver Mode</b></sub>&nbsp;&nbsp;&nbsp;&nbsp;
+  <sub><b>Passenger Map</b></sub>
 </p>
