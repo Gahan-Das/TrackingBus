@@ -28,12 +28,15 @@
             android:hint="Enter Bus Number (e.g., 37)" 
             android:inputType="textCapCharacters"/>
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/etDestination"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Destination (e.g. Dhakuria)"
-            android:inputType="text" />
+            android:hint="Destination"
+            android:inputType="none"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+
 
         <Button
             android:id="@+id/btnStartSharing"

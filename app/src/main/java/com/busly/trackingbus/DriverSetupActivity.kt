@@ -1,5 +1,8 @@
 package com.busly.trackingbus
 
+import android.text.Editable
+import android.widget.ArrayAdapter
+import android.text.TextWatcher
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -24,6 +27,8 @@ class DriverSetupActivity : AppCompatActivity() {
         FirebaseAuth.getInstance().uid ?: "driver_${System.currentTimeMillis()}"
     }
 
+    private var terminalStops: List<String> = emptyList()
+
     // ---------- Permission launcher ----------
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
@@ -43,6 +48,28 @@ class DriverSetupActivity : AppCompatActivity() {
         binding = ActivityDriverSetupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.etDestination.apply {
+            isEnabled = true
+            isFocusable = true
+            isFocusableInTouchMode = true
+            keyListener = null
+        }
+
+
+        binding.etBusId.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val busNo = s.toString().trim().uppercase()
+                if (busNo.isNotEmpty()) {
+                    loadTerminalStops(busNo)
+                } else {
+                    disableDestination()
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
         binding.btnStartSharing.setOnClickListener {
             val busIdInput = binding.etBusId.text.toString().trim().uppercase()
             val destInput = binding.etDestination.text.toString().trim()
@@ -56,7 +83,17 @@ class DriverSetupActivity : AppCompatActivity() {
             destination = destInput
 
             setupPresence(busIdInput)
+            if (!terminalStops.contains(destInput)) {
+                Toast.makeText(
+                    this,
+                    "Select destination from the list only",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
             driverRef.child("destination").setValue(destInput)
+
 
             checkLocationPermission()
         }
@@ -65,6 +102,64 @@ class DriverSetupActivity : AppCompatActivity() {
             val intent = Intent(this, UpdateRouteActivity::class.java)
             startActivity(intent)
         }
+    }
+    private fun disableDestination() {
+        binding.etDestination.apply {
+            setText("")
+            isEnabled = false
+            isFocusable = false
+            isFocusableInTouchMode = false
+        }
+    }
+    private fun loadTerminalStops(busNo: String) {
+
+        val stopsRef = FirebaseDatabase.getInstance()
+            .getReference("busRoutes")
+            .child(busNo)          // "12"
+            .child("stops")
+
+        stopsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                if (!snapshot.exists()) {
+                    disableDestination()
+                    return
+                }
+
+                val stops = mutableListOf<String>()
+
+                for (child in snapshot.children) {
+                    child.getValue(String::class.java)?.let {
+                        stops.add(formatStopName(it))
+                    }
+                }
+
+                if (stops.size < 2) {
+                    disableDestination()
+                    return
+                }
+
+                terminalStops = listOf(
+                    stops.first(),
+                    stops.last()
+                )
+
+                enableDestinationSuggestions(terminalStops)
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                disableDestination()
+            }
+        })
+    }
+    private fun formatStopName(raw: String): String {
+        return raw
+            .replace("_", " ")
+            .lowercase()
+            .split(" ")
+            .joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
     }
 
     // ---------- Firebase presence ----------
@@ -94,6 +189,36 @@ class DriverSetupActivity : AppCompatActivity() {
 
             override fun onCancelled(error: DatabaseError) {}
         })
+    }
+    private fun enableDestinationSuggestions(stops: List<String>) {
+
+        binding.etDestination.apply {
+            // enable field
+            isEnabled = true
+            isFocusable = true
+            isFocusableInTouchMode = true
+
+            // prevent manual typing
+            keyListener = null
+
+            // adapter
+            val adapter = ArrayAdapter(
+                this@DriverSetupActivity,
+                android.R.layout.simple_dropdown_item_1line,
+                stops
+            )
+
+            setAdapter(adapter)
+
+            // show suggestions immediately
+            threshold = 0
+            post { showDropDown() }
+
+            // when user selects → fill input
+            setOnItemClickListener { parent, _, position, _ ->
+                setText(parent.getItemAtPosition(position).toString(), false)
+            }
+        }
     }
 
     // ---------- Permission ----------
